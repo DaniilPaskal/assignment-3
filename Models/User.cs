@@ -8,4 +8,6 @@ public class User
     public string Password { get; set; }
     public string Address { get; set; }
     public string Province { get; set; }
+
+    public virtual ICollection<Product> PurchaseHistory { get; set; }
 }

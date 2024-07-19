@@ -11,4 +11,6 @@ public class Cart
     public User User { get; set; }
 
     public virtual ICollection<Product> Products { get; set; }
+
+    public virtual ICollection<int> Quantities { get; set; }
 }
