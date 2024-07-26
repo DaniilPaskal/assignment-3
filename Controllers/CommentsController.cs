@@ -19,152 +19,29 @@ namespace assignment_3.Controllers
             _context = context;
         }
 
-        // GET: Comments
-        public async Task<IActionResult> Index()
-        {
-            var applicationDbContext = _context.Comment.Include(c => c.Product).Include(c => c.User);
-            return View(await applicationDbContext.ToListAsync());
-        }
-
-        // GET: Comments/Details/5
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var comment = await _context.Comment
-                .Include(c => c.Product)
-                .Include(c => c.User)
-                .FirstOrDefaultAsync(m => m.CommentId == id);
-            if (comment == null)
-            {
-                return NotFound();
-            }
-
-            return View(comment);
-        }
-
-        // GET: Comments/Create
-        public IActionResult Create()
-        {
-            ViewData["ProductId"] = new SelectList(_context.Products, "ProductId", "ProductId");
-            ViewData["UserId"] = new SelectList(_context.User, "UserId", "UserId");
-            return View();
-        }
-
-        // POST: Comments/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        // POST: /comment
+        [Route("comment")]
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("CommentId,Rating,Images,UserId,ProductId")] Comment comment)
+        public async Task<IActionResult> Create(Comment comment)
         {
-            if (ModelState.IsValid)
-            {
+            Random random = new Random();
+            comment.CommentId = random.Next(1, 10000);
+
+            if (comment.Text.Length > 0) {
                 _context.Add(comment);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return Ok($"Comment saved in the database.");
             }
-            ViewData["ProductId"] = new SelectList(_context.Products, "ProductId", "ProductId", comment.ProductId);
-            ViewData["UserId"] = new SelectList(_context.User, "UserId", "UserId", comment.UserId);
-            return View(comment);
+
+            return BadRequest($"Error saving comment.");
         }
 
-        // GET: Comments/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        // GET: /get-comments
+        [Route("get-comments")]
+        [HttpGet]
+        public async Task<IActionResult> Index(int productId)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var comment = await _context.Comment.FindAsync(id);
-            if (comment == null)
-            {
-                return NotFound();
-            }
-            ViewData["ProductId"] = new SelectList(_context.Products, "ProductId", "ProductId", comment.ProductId);
-            ViewData["UserId"] = new SelectList(_context.User, "UserId", "UserId", comment.UserId);
-            return View(comment);
-        }
-
-        // POST: Comments/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("CommentId,Rating,Images,UserId,ProductId")] Comment comment)
-        {
-            if (id != comment.CommentId)
-            {
-                return NotFound();
-            }
-
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(comment);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!CommentExists(comment.CommentId))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["ProductId"] = new SelectList(_context.Products, "ProductId", "ProductId", comment.ProductId);
-            ViewData["UserId"] = new SelectList(_context.User, "UserId", "UserId", comment.UserId);
-            return View(comment);
-        }
-
-        // GET: Comments/Delete/5
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var comment = await _context.Comment
-                .Include(c => c.Product)
-                .Include(c => c.User)
-                .FirstOrDefaultAsync(m => m.CommentId == id);
-            if (comment == null)
-            {
-                return NotFound();
-            }
-
-            return View(comment);
-        }
-
-        // POST: Comments/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            var comment = await _context.Comment.FindAsync(id);
-            if (comment != null)
-            {
-                _context.Comment.Remove(comment);
-            }
-
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
-
-        private bool CommentExists(int id)
-        {
-            return _context.Comment.Any(e => e.CommentId == id);
+            return Ok(await _context.Comments.Where(e => e.ProductId == productId).ToListAsync());
         }
     }
 }
