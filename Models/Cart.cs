@@ -10,7 +10,7 @@ public class Cart
     public int UserId { get; set; }
     public User User { get; set; }
 
-    public virtual ICollection<Product> Products { get; set; }
+    public virtual List<Product> Products { get; set; }
 
-    public virtual ICollection<int> Quantities { get; set; }
+    public virtual List<int> Quantities { get; set; }
 }

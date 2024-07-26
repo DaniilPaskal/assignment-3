@@ -9,5 +9,5 @@ public class User
     public string Address { get; set; }
     public string Province { get; set; }
 
-    public virtual ICollection<Product> PurchaseHistory { get; set; }
+    public virtual List<Product> PurchaseHistory { get; set; }
 }
