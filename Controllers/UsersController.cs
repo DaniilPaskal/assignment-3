@@ -33,7 +33,7 @@ namespace assignment_3.Controllers
 			user.PurchaseHistory = new List<Product>();
 			
 			// Create user cart
-			cartsController.CreateCart(user.Id);
+			cartsController.CreateCart(user);
 
             if (true) {
                 _context.Add(user);

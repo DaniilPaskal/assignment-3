@@ -32,12 +32,17 @@ namespace assignment_3.Controllers
         // PUT: /update-cart
         [Route("update-cart")]
         [HttpPut]
-        public async Task<IActionResult> Edit(int userId, Product product, int quantity)
+        public async Task<IActionResult> Edit(int userId, int productId, int quantity)
         {
+            ProductsController productsController = new ProductsController(_context);
             List<Product> products = new List<Product>();
             List<int> quantities = new List<int>();
             Cart cart;
             int index;
+
+            // Get product
+            var productResult = await productsController.GetProductById(productId);
+            Product product = productResult as Product;
 
             // Get existing cart products and quantities
             var cartResult = await GetCartById(userId);
@@ -99,12 +104,12 @@ namespace assignment_3.Controllers
         }
 		
 		// Create cart
-		public async void CreateCart(int userId) {
+		public async void CreateCart(User user) {
 			Random random = new Random();
 			Cart cart = new Cart();
 			
 			cart.Id = random.Next(1, 10000);
-			cart.UserId = userId;
+			cart.User = user;
 			cart.Products = new List<Product>();
 			cart.Quantities = new List<int>();
 			

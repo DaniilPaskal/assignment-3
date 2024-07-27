@@ -137,7 +137,7 @@ namespace assignment_3.Controllers
             return Ok($"Deleted product named {deletedProduct.Name}.");
         }
 
-        // Get product with specific name
+        // Get product with specific ID
         public async Task<IActionResult> GetProductById(int productId) {
             return Ok(_context.Products.Single(e => e.Id == productId));
         }

@@ -41,15 +41,20 @@ namespace assignment_3.Controllers
         // GET: /get-comments
         [Route("get-comments")]
         [HttpGet]
-        public async Task<IActionResult> GetCommentsByProduct(int productId)
+        public async Task<IActionResult> GetCommentsByProduct(Product product)
         {
+            int productId = product.Id;
             return Ok(await _context.Comments.Where(e => e.ProductId == productId).ToListAsync());
         }
 		
 		// Delete comments associated with a product
-		public async void DeleteCommentsByProduct(int productId) {
+		public async void DeleteCommentsByProduct(Product product) {
+            int productId = product.Id;
+
+            // Get product comments
 			List<Comment> deletedComments = await _context.Comments.Where(e => e.ProductId == productId).ToListAsync();
 			
+            // Loop through comments and delete
 			for (int i = 0; i < deletedComments.Count; i++) {
 				_context.Comments.Remove(deletedComments[i]);
 			}
