@@ -26,15 +26,12 @@ namespace assignment_3.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(Product product)
         {
-            Random random = new Random();
-
-            product.ProductId = random.Next(1, 10000);
             product.Rating = 0;
 
             if (true) {
                 _context.Products.Add(product);
                 await _context.SaveChangesAsync();
-                return Ok($"{product.Name} has been savedd in the database.");
+                return Ok($"{product.Name} has been saved in the database.");
             }
 
             return BadRequest("Error saving {product.Name}.");
@@ -62,7 +59,7 @@ namespace assignment_3.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!ProductExists(product.ProductId))
+                    if (!ProductExists(product.Id))
                     {
                         return NotFound($"Failed to update {product.Name}.");
                     }
@@ -71,7 +68,6 @@ namespace assignment_3.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
             }
             return Ok($"Updated {product.Name}.");
         }
@@ -88,7 +84,7 @@ namespace assignment_3.Controllers
             double rating = 0;
 
             // Get all comments associated with product
-            var commentsResult = await commentsController.Index(product.ProductId);
+            var commentsResult = await commentsController.GetCommentsByProduct(product.Id);
             comments = commentsResult as List<Comment>;
 
             // Get sum and count of ratings
@@ -110,7 +106,7 @@ namespace assignment_3.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!ProductExists(product.ProductId))
+                    if (!ProductExists(product.Id))
                     {
                         return NotFound($"Error updating product.");
                     }
@@ -119,7 +115,6 @@ namespace assignment_3.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
             }
             return Ok($"Rating has been updated to {product.Rating}.");
         }
@@ -129,22 +124,28 @@ namespace assignment_3.Controllers
         [HttpDelete]
         public async Task<IActionResult> DeleteConfirmed(Product product)
         {
-            var productResult = await GetProductById(product.ProductId);
-            Product deletedProduct = productResult as Product;
+			CommentsController commentsController = new CommentsController(_context);
+			
+			// Delete product
+            var deletedProduct = await _context.Products.FindAsync(product.Id);
             _context.Products.Remove(deletedProduct);
             await _context.SaveChangesAsync();
+			
+			// Delete product comments
+			commentsController.DeleteCommentsByProduct(product.Id);
+			
             return Ok($"Deleted product named {deletedProduct.Name}.");
         }
 
         // Get product with specific name
         public async Task<IActionResult> GetProductById(int productId) {
-            return Ok(_context.Products.Single(e => e.ProductId == productId));
+            return Ok(_context.Products.Single(e => e.Id == productId));
         }
 
         // Check if product exists
         private bool ProductExists(int id)
         {
-            return _context.Products.Any(e => e.ProductId == id);
+            return _context.Products.Any(e => e.Id == id);
         }
     }
 }

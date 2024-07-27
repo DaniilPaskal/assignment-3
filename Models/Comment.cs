@@ -4,7 +4,7 @@ namespace assignment_3.Models;
 
 public class Comment
 {
-    public int CommentId { get; set; }
+	public int Id { get; set; }
     public double Rating { get; set; }
     public string Text { get; set; }
     public virtual List<string> Images { get; set; }

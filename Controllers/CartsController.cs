@@ -10,6 +10,8 @@ using assignment_3.Models;
 
 namespace assignment_3.Controllers
 {
+	[Route("")]
+    [ApiController]
     public class CartsController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -76,7 +78,7 @@ namespace assignment_3.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!CartExists(cart.CartId))
+                    if (!CartExists(cart.Id))
                     {
                         return NotFound($"Failed to update cart.");
                     }
@@ -93,8 +95,22 @@ namespace assignment_3.Controllers
         // Check if cart exists
         private bool CartExists(int id)
         {
-            return _context.Carts.Any(e => e.CartId == id);
+            return _context.Carts.Any(e => e.Id == id);
         }
+		
+		// Create cart
+		public async void CreateCart(int userId) {
+			Random random = new Random();
+			Cart cart = new Cart();
+			
+			cart.Id = random.Next(1, 10000);
+			cart.UserId = userId;
+			cart.Products = new List<Product>();
+			cart.Quantities = new List<int>();
+			
+			_context.Add(cart);
+            await _context.SaveChangesAsync();
+		}
 
         // Clear cart
         public async void ClearCart(int userId) {

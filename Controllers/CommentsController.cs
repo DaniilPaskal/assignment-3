@@ -10,6 +10,8 @@ using assignment_3.Models;
 
 namespace assignment_3.Controllers
 {
+	[Route("")]
+    [ApiController]
     public class CommentsController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -25,7 +27,7 @@ namespace assignment_3.Controllers
         public async Task<IActionResult> Create(Comment comment)
         {
             Random random = new Random();
-            comment.CommentId = random.Next(1, 10000);
+            comment.Id = random.Next(1, 10000);
 
             if (comment.Text.Length > 0) {
                 _context.Add(comment);
@@ -39,9 +41,20 @@ namespace assignment_3.Controllers
         // GET: /get-comments
         [Route("get-comments")]
         [HttpGet]
-        public async Task<IActionResult> Index(int productId)
+        public async Task<IActionResult> GetCommentsByProduct(int productId)
         {
             return Ok(await _context.Comments.Where(e => e.ProductId == productId).ToListAsync());
         }
+		
+		// Delete comments associated with a product
+		public async void DeleteCommentsByProduct(int productId) {
+			List<Comment> deletedComments = await _context.Comments.Where(e => e.ProductId == productId).ToListAsync();
+			
+			for (int i = 0; i < deletedComments.Count; i++) {
+				_context.Comments.Remove(deletedComments[i]);
+			}
+			
+			await _context.SaveChangesAsync();
+		}
     }
 }

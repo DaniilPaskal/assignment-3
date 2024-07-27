@@ -10,6 +10,8 @@ using assignment_3.Models;
 
 namespace assignment_3.Controllers
 {
+	[Route("")]
+    [ApiController]
     public class UsersController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -24,8 +26,14 @@ namespace assignment_3.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(User user)
         {
+			CartsController cartsController = new CartsController(_context);
             Random random = new Random();
-            user.UserId = random.Next(1, 10000);
+			
+            user.Id = random.Next(1, 10000);
+			user.PurchaseHistory = new List<Product>();
+			
+			// Create user cart
+			cartsController.CreateCart(user.Id);
 
             if (true) {
                 _context.Add(user);
@@ -35,13 +43,21 @@ namespace assignment_3.Controllers
 
             return BadRequest($"Error saving {user.Name}.");
         }
+		
+		// GET: /get-users
+        [Route("get-users")]
+        [HttpGet]
+        public async Task<IActionResult> Index()
+        {
+            return Ok(await _context.Users.ToListAsync());
+        }
 
         // GET: /login
         [Route("login")]
         [HttpGet]
-        public async Task<IActionResult> Index(String name, String password)
+        public async Task<IActionResult> Login(String email, String password)
         {
-            User user = await _context.Users.Where(e => e.Name == name && e.Password == password).SingleOrDefaultAsync();
+            User user = await _context.Users.Where(e => e.Email == email && e.Password == password).SingleOrDefaultAsync();
 
             if (user != null) {
                 return Ok($"User authenticated.");
@@ -64,7 +80,7 @@ namespace assignment_3.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!UserExists(user.UserId))
+                    if (!UserExists(user.Id))
                     {
                         return NotFound($"Failed to update {user.Name}.");
                     }
@@ -73,7 +89,6 @@ namespace assignment_3.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
             }
             return Ok($"Updated {user.Name}.");
         }
@@ -83,7 +98,7 @@ namespace assignment_3.Controllers
         [HttpDelete]
         public async Task<IActionResult> DeleteConfirmed(User user)
         {
-            var deletedUser = await _context.Users.FindAsync(user.UserId);
+            var deletedUser = await _context.Users.FindAsync(user.Id);
             _context.Users.Remove(deletedUser);
             await _context.SaveChangesAsync();
             return Ok($"Deleted user with email {user.Email}.");
@@ -91,13 +106,13 @@ namespace assignment_3.Controllers
 
         // Get user with specific ID
         public async Task<IActionResult> GetUserById(int userId) {
-            return Ok(_context.Users.Single(e => e.UserId == userId));
+            return Ok(_context.Users.Single(e => e.Id == userId));
         }
 
         // Check if user exists
         public bool UserExists(int userId)
         {
-            return _context.Users.Any(e => e.UserId == userId);
+            return _context.Users.Any(e => e.Id == userId);
         }
     }
 }

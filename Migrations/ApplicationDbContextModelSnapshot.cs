@@ -19,7 +19,7 @@ namespace assignment_3.Migrations
 
             modelBuilder.Entity("assignment_3.Models.Cart", b =>
                 {
-                    b.Property<int>("CartId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
@@ -30,7 +30,7 @@ namespace assignment_3.Migrations
                     b.Property<int>("UserId")
                         .HasColumnType("INTEGER");
 
-                    b.HasKey("CartId");
+                    b.HasKey("Id");
 
                     b.HasIndex("UserId");
 
@@ -39,7 +39,7 @@ namespace assignment_3.Migrations
 
             modelBuilder.Entity("assignment_3.Models.Comment", b =>
                 {
-                    b.Property<int>("CommentId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
@@ -60,7 +60,7 @@ namespace assignment_3.Migrations
                     b.Property<int>("UserId")
                         .HasColumnType("INTEGER");
 
-                    b.HasKey("CommentId");
+                    b.HasKey("Id");
 
                     b.HasIndex("ProductId");
 
@@ -71,7 +71,7 @@ namespace assignment_3.Migrations
 
             modelBuilder.Entity("assignment_3.Models.Order", b =>
                 {
-                    b.Property<int>("OrderId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
@@ -84,7 +84,7 @@ namespace assignment_3.Migrations
                     b.Property<int>("UserId")
                         .HasColumnType("INTEGER");
 
-                    b.HasKey("OrderId");
+                    b.HasKey("Id");
 
                     b.HasIndex("UserId");
 
@@ -93,7 +93,7 @@ namespace assignment_3.Migrations
 
             modelBuilder.Entity("assignment_3.Models.Product", b =>
                 {
-                    b.Property<int>("ProductId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
@@ -124,7 +124,7 @@ namespace assignment_3.Migrations
                     b.Property<int?>("UserId")
                         .HasColumnType("INTEGER");
 
-                    b.HasKey("ProductId");
+                    b.HasKey("Id");
 
                     b.HasIndex("CartId");
 
@@ -135,7 +135,7 @@ namespace assignment_3.Migrations
 
             modelBuilder.Entity("assignment_3.Models.User", b =>
                 {
-                    b.Property<int>("UserId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
@@ -159,7 +159,7 @@ namespace assignment_3.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.HasKey("UserId");
+                    b.HasKey("Id");
 
                     b.ToTable("Users");
                 });

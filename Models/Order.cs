@@ -4,7 +4,7 @@ namespace assignment_3.Models;
 
 public class Order
 {
-    public int OrderId { get; set; }
+    public int Id { get; set; }
     public DateTime Date { get; set; }
     public double Cost { get; set; }
     

@@ -16,6 +16,9 @@
                 @Html.DisplayNameFor(model => model.Rating)
             </th>
             <th>
+                @Html.DisplayNameFor(model => model.Text)
+            </th>
+            <th>
                 @Html.DisplayNameFor(model => model.Images)
             </th>
             <th>
@@ -34,18 +37,21 @@
                 @Html.DisplayFor(modelItem => item.Rating)
             </td>
             <td>
+                @Html.DisplayFor(modelItem => item.Text)
+            </td>
+            <td>
                 @Html.DisplayFor(modelItem => item.Images)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.User.UserId)
+                @Html.DisplayFor(modelItem => item.User.Id)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Product.ProductId)
+                @Html.DisplayFor(modelItem => item.Product.Id)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.CommentId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.CommentId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.CommentId">Delete</a>
+                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
             </td>
         </tr>
 }

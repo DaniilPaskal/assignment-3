@@ -10,6 +10,8 @@ using assignment_3.Models;
 
 namespace assignment_3.Controllers
 {
+	[Route("")]
+    [ApiController]
     public class OrdersController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -73,7 +75,7 @@ namespace assignment_3.Controllers
 
             // Create order
             order = new Order();
-            order.OrderId = random.Next(1, 10000);
+            order.Id = random.Next(1, 10000);
             order.Date = date;
             order.Cost = totalCost;
             order.UserId = userId;

@@ -4,7 +4,7 @@ namespace assignment_3.Models;
 
 public class Cart
 {
-    public int CartId { get; set; }
+    public int Id { get; set; }
     
     [ForeignKey("User")]
     public int UserId { get; set; }
